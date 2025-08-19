@@ -7,6 +7,9 @@ let score = 0;
 let selectedAnswer = null;
 let isAnswered = false;
 let userProgress = {};
+let questionTimer = null;
+let timeRemaining = 30;
+let isReverseMode = false; // 한국어→프랑스어 모드
 
 // 로컬 스토리지 키
 const PROGRESS_KEY = 'delf_b1_progress';
@@ -255,7 +258,7 @@ function showQuestion() {
 
     // 정답과 오답 선택지 생성
     const correctAnswer = currentWord.korean;
-    const wrongAnswers = getWrongAnswers(correctAnswer);
+    const wrongAnswers = getWrongAnswers(correctAnswer, currentWord);
     const allAnswers = shuffleArray([correctAnswer, ...wrongAnswers]);
 
     // 선택지 표시
@@ -277,12 +280,27 @@ function showQuestion() {
     updateQuizProgress();
 }
 
-// 오답 선택지 생성
-function getWrongAnswers(correctAnswer) {
+// 오답 선택지 생성 (난이도 높임)
+function getWrongAnswers(correctAnswer, correctWord) {
     const allWords = vocabularyData.levels.flatMap(level => level.words);
-    const wrongAnswers = allWords
-        .filter(word => word.korean !== correctAnswer)
-        .map(word => word.korean);
+    
+    // 같은 type의 단어들을 우선적으로 선택 (더 어렵게)
+    const sameTypeWords = allWords.filter(word => 
+        word.type === correctWord.type && 
+        (isReverseMode ? word.french !== correctAnswer : word.korean !== correctAnswer)
+    );
+    
+    // type이 같은 단어가 충분하지 않으면 다른 단어들도 포함
+    let wrongAnswers = sameTypeWords.map(word => 
+        isReverseMode ? word.french : word.korean
+    );
+    
+    if (wrongAnswers.length < 3) {
+        const otherWords = allWords
+            .filter(word => isReverseMode ? word.french !== correctAnswer : word.korean !== correctAnswer)
+            .map(word => isReverseMode ? word.french : word.korean);
+        wrongAnswers = [...wrongAnswers, ...otherWords];
+    }
     
     return shuffleArray(wrongAnswers).slice(0, 3);
 }
@@ -298,7 +316,7 @@ function selectAnswer(optionElement, selectedAnswer, correctAnswer) {
 
     // 선택된 옵션 표시
     optionElement.classList.add('selected');
-    this.selectedAnswer = selectedAnswer;
+    window.selectedAnswer = selectedAnswer; // 전역 변수로 수정
 
     // 다음 버튼 활성화
     document.getElementById('next-btn').disabled = false;
@@ -329,6 +347,8 @@ function nextQuestion() {
     // 잠시 후 다음 문제로
     setTimeout(() => {
         currentQuestionIndex++;
+        selectedAnswer = null; // 선택된 답안 초기화
+        isAnswered = false; // 답변 상태 초기화
         updateQuizProgress();
         showQuestion();
     }, 1500);
