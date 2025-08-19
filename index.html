@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DELF B1 단어 시험 - 프랑스어 학습</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇫🇷</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">
+                <span class="flag">🇫🇷</span>
+                DELF B1 단어 시험
+            </h1>
+            <p class="subtitle">프랑스어 독해·청해·작문·구술을 위한 단어 학습</p>
+        </header>
+
+        <main id="main-content">
+            <!-- 홈 화면 -->
+            <section id="home-screen" class="screen active">
+                <div class="welcome-card">
+                    <h2>프랑스어 DELF B1 단어 마스터</h2>
+                    <p>20단계로 구성된 체계적인 단어 학습 프로그램입니다.<br>
+                    각 단계는 50개의 단어로 구성되어 있으며, 누적 학습을 통해 효과적으로 암기할 수 있습니다.</p>
+                    
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <span class="stat-number">20</span>
+                            <span class="stat-label">단계</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">1000</span>
+                            <span class="stat-label">단어</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="progress-stat">0</span>
+                            <span class="stat-label">완료된 단계</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="showLevelSelect()">
+                            <span class="btn-icon">📚</span>
+                            학습 시작하기
+                        </button>
+                        <button class="btn btn-secondary" onclick="showProgress()">
+                            <span class="btn-icon">📊</span>
+                            학습 현황 보기
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 단계 선택 화면 -->
+            <section id="level-select-screen" class="screen">
+                <div class="section-header">
+                    <button class="btn-back" onclick="showHome()">
+                        <span>←</span> 홈으로
+                    </button>
+                    <h2>단계 선택</h2>
+                </div>
+
+                <div class="level-grid" id="level-grid">
+                    <!-- JavaScript로 동적 생성 -->
+                </div>
+            </section>
+
+            <!-- 단어 시험 화면 -->
+            <section id="quiz-screen" class="screen">
+                <div class="quiz-header">
+                    <button class="btn-back" onclick="showLevelSelect()">
+                        <span>←</span> 단계 선택
+                    </button>
+                    <div class="quiz-info">
+                        <h3 id="quiz-level-title">단계 1: 기본 인사 및 자기소개</h3>
+                        <div class="quiz-progress">
+                            <span id="quiz-current">1</span> / <span id="quiz-total">50</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-card">
+                        <div class="question">
+                            <h4 id="question-text">다음 프랑스어의 뜻은?</h4>
+                            <div class="word-display" id="word-display">bonjour</div>
+                        </div>
+
+                        <div class="answers" id="answer-options">
+                            <!-- JavaScript로 동적 생성 -->
+                        </div>
+
+                        <div class="quiz-actions">
+                            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>
+                                다음 문제
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="quiz-sidebar">
+                        <div class="score-display">
+                            <h4>점수</h4>
+                            <div class="score" id="current-score">0 / 0</div>
+                        </div>
+
+                        <div class="progress-display">
+                            <h4>진행률</h4>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-text" id="progress-text">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 결과 화면 -->
+            <section id="result-screen" class="screen">
+                <div class="result-container">
+                    <div class="result-header">
+                        <h2>시험 완료!</h2>
+                        <div class="result-score">
+                            <span id="final-score">0</span> / <span id="final-total">50</span>
+                        </div>
+                        <div class="result-percentage" id="result-percentage">0%</div>
+                    </div>
+
+                    <div class="result-feedback" id="result-feedback">
+                        <!-- JavaScript로 동적 생성 -->
+                    </div>
+
+                    <div class="result-actions">
+                        <button class="btn btn-primary" onclick="retryQuiz()">
+                            <span class="btn-icon">🔄</span>
+                            다시 시도
+                        </button>
+                        <button class="btn btn-secondary" onclick="showLevelSelect()">
+                            <span class="btn-icon">📚</span>
+                            다른 단계 선택
+                        </button>
+                        <button class="btn btn-tertiary" onclick="showHome()">
+                            <span class="btn-icon">🏠</span>
+                            홈으로
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 학습 현황 화면 -->
+            <section id="progress-screen" class="screen">
+                <div class="section-header">
+                    <button class="btn-back" onclick="showHome()">
+                        <span>←</span> 홈으로
+                    </button>
+                    <h2>학습 현황</h2>
+                </div>
+
+                <div class="progress-overview">
+                    <div class="overall-stats">
+                        <div class="stat-card">
+                            <h3>전체 진행률</h3>
+                            <div class="big-progress">
+                                <div class="big-progress-circle">
+                                    <span id="overall-percentage">0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3>학습 통계</h3>
+                            <div class="stat-list">
+                                <div class="stat-row">
+                                    <span>완료된 단계:</span>
+                                    <span id="completed-levels">0 / 20</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>총 맞힌 단어:</span>
+                                    <span id="total-correct">0</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>평균 점수:</span>
+                                    <span id="average-score">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="level-progress-list" id="level-progress-list">
+                        <!-- JavaScript로 동적 생성 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 로딩 화면 -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>단어 데이터를 불러오는 중...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
