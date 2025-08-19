@@ -306,7 +306,8 @@ function getWrongAnswers(correctAnswer, correctWord) {
 }
 
 // 답안 선택
-function selectAnswer(optionElement, selectedAnswer, correctAnswer) {
+function selectAnswer(optionElement, answer, correctAnswer) {
+    console.log('selectAnswer 호출됨:', answer);
     if (isAnswered) return;
 
     // 모든 선택지에서 선택 상태 제거
@@ -316,18 +317,26 @@ function selectAnswer(optionElement, selectedAnswer, correctAnswer) {
 
     // 선택된 옵션 표시
     optionElement.classList.add('selected');
-    window.selectedAnswer = selectedAnswer; // 전역 변수로 수정
+    selectedAnswer = answer; // 전역 변수에 저장
+    console.log('selectedAnswer 설정됨:', selectedAnswer);
 
     // 다음 버튼 활성화
-    document.getElementById('next-btn').disabled = false;
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.disabled = false;
+    console.log('다음 버튼 활성화됨');
 }
 
 // 다음 문제
 function nextQuestion() {
-    if (!selectedAnswer) return;
+    console.log('nextQuestion 호출됨, selectedAnswer:', selectedAnswer);
+    if (!selectedAnswer) {
+        console.log('selectedAnswer가 없어서 함수 종료');
+        return;
+    }
 
     const correctAnswer = currentQuiz[currentQuestionIndex].korean;
     const isCorrect = selectedAnswer === correctAnswer;
+    console.log('정답:', correctAnswer, '선택한 답:', selectedAnswer, '정답여부:', isCorrect);
 
     // 정답 표시
     document.querySelectorAll('.answer-option').forEach(option => {
